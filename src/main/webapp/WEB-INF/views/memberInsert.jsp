@@ -1,5 +1,5 @@
-<%@ page import="kr.bit.model.MemberVO" %>
-<%@ page import="kr.bit.model.MemberDAO" %>
+<%@ page import="com.yungbo.park.model.MemberVO" %>
+<%@ page import="com.yungbo.park.model.MemberDAO" %>
 <%@ page import="java.io.PrintWriter" %><%--
   Created by IntelliJ IDEA.
   User: Jungwoo Park

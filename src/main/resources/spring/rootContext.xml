@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
 
-    <!--  My Batis SqlSessionFactory      -->
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" >
-        <property name="dataSource" ref="simpleDriverDataSource"/>
-        <property name="configLocation" value="/WEB-INF/mybatis/config.xml"/>
-        <property name="mapperLocations" value="classpath*:com/yungbo/park/mybatis/*.xml"/>
-        <!--   여기 아래에 있는 모든 xml을 알 수 있음         -->
-    </bean>
-
-
-
-    <!--  jdbc 연결 (DataSource)  -->
-     <bean id="simpleDriverDataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-         <property name="driverClass" value="${driver}"/>
-         <property name="url" value="${url}"/>
-         <property name="username" value="${username}"/>
-         <property name="password" value="${password}"/>
-
-     </bean>
 
     <!-- db.properties 파일 연결 -->
-    <bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-
+    <!--<bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations" value="/WEB-INF/mybatis/db.properties"/>
-        <!--    PropertyPlaceholderConfigurer가 가지고 있는 locations라는 메서드를 value 값을 가지고 호출하는 개념    -->
+        &lt;!&ndash;    PropertyPlaceholderConfigurer가 가지고 있는 locations라는 메서드를 value 값을 가지고 호출하는 개념    &ndash;&gt;
     </bean>
+    -->
+    <!--  jdbc 연결 (DataSource)  -->
+
+    <context:property-placeholder location="classpath:db.properties" />
+    <context:component-scan base-package="com.yungbo.park.model"/>
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${driver}" />
+        <property name="url" value="${url}" />
+        <property name="username" value="${username}" />
+        <property name="password" value="${password}" />
+    </bean>
+
+    <!--  My Batis SqlSessionFactory      -->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" >
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="configLocation" value="classpath:config.xml"/>
+        <property name="mapperLocations" value="classpath:MemberMapper.xml"/>
+    </bean>
+
+
+
+
+
 
 </beans>

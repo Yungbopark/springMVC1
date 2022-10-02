@@ -8,13 +8,16 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import com.yungbo.park.model.*;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Member;
 import java.util.List;
 
+@Repository
 public class MemberDAO {
 
     // JDBC -> MyBatis
@@ -27,12 +30,13 @@ public class MemberDAO {
     // Mybatis 에서는 connection 을 sqlSession이라고 부른다
     // sql session들이 여러개 모어져 있는 곳이 SqlSessionFactory
 
-    private static SqlSessionFactory sqlSessionFactory;
+    @Autowired
+    private SqlSessionFactory sqlSessionFactory;
     // sqlSessionFactory 안에는 sqlSession 여러개가 들어있음
     // 이것들이 db연결을 위한 각각의 객체
 
     // 초기화 블럭 - 프로그램 실행 시 딱 한번만 실행되는 코드
-    static {
+ /*   static {
         try {
             String resource = "kr/bit/mybatis/config.xml";
             InputStream inputStream = null;
@@ -43,13 +47,26 @@ public class MemberDAO {
             throw new RuntimeException(e);
         }
             }
+*/
+    //public List<MemberVO> memberList() {
+
+    public String mapperTest() {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        String test = sqlSession.selectOne("test");
+
+        return test;
+    }
+
 
     public List<MemberVO> memberList() {
         SqlSession session = sqlSessionFactory.openSession();
+        
 //        session은 config.xml파일을 가지고 만들었고, 이 xml 파일 내에는
 //        mapper 의 경로 및 이름 까지 지정이 되어 있음
 //        자기가 실행해야 될 sql이 들어있는 태그의 id를 지정해 주는 것
+
         List<MemberVO> memberList = session.selectList("memberList");
+
         session.close(); // 반납
         return memberList;
         }
